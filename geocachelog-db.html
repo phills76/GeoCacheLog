@@ -1,0 +1,386 @@
+<html><head><base href="https://geocache-log.com/"><title>Welcome to GeoCacheLog</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background-color: #f4fff9;
+    color: #333;
+  }
+  .container {
+    width: 80%;
+    max-width: 800px;
+    margin: auto;
+    overflow: hidden;
+    padding: 20px;
+  }
+  header {
+    background: #007d46;
+    color: #ffffff;
+    padding-top: 30px;
+    min-height: 70px;
+    border-bottom: #00ff91 3px solid;
+  }
+  header a {
+    color: #ffffff;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-size: 16px;
+  }
+  header .highlight {
+    color: #ffffff;
+    font-weight: bold;
+  }
+  header ul {
+    padding: 0;
+    list-style: none;
+  }
+  header li {
+    float: left;
+    display: inline;
+    padding: 0 20px 0 20px;
+  }
+  .logo {
+    width: 50px;
+    height: 50px;
+    vertical-align: middle;
+    margin-right: 10px;
+    border-radius: 5px;
+  }
+  #main {
+    background: #ffffff;
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  }
+  h1, h2, h3 {
+    color: #007d46;
+  }
+  .form-group {
+    margin-bottom: 15px;
+  }
+  .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #007d46;
+  }
+  .form-group input[type="text"],
+  .form-group input[type="date"] {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+  .btn {
+    display: inline-block;
+    background: #007d46;
+    color: #ffffff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  .btn:hover {
+    background: #005d33;
+  }
+  #recent-logs {
+    margin-top: 30px;
+  }
+  .log-entry {
+    background: #f4fff9;
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+  }
+  footer {
+    background: #007d46;
+    color: #ffffff;
+    text-align: center;
+    padding: 20px;
+    margin-top: 20px;
+  }
+  .language-selector {
+    float: right;
+    margin-top: 10px;
+  }
+  .language-selector select {
+    background-color: #005d33;
+    color: white;
+    border: none;
+    padding: 5px;
+    border-radius: 3px;
+  }
+  #welcome-message {
+    background-color: #e6f7ff;
+    border: 1px solid #b3e5fc;
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 20px;
+    line-height: 1.6;
+  }
+  .page-title {
+    text-align: center;
+    color: #007d46;
+    margin-bottom: 20px;
+  }
+</style>
+
+<!-- Inclure Firebase -->
+<script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore.js"></script>
+<script>
+  // Configuration Firebase
+  const firebaseConfig = {
+      apiKey: "AIzaSyALVwlid8qyTCrG4vi9uPhTkmxo2Vg9FR4",
+      authDomain: "geocachelog-db.firebaseapp.com",
+      projectId: "geocachelog-db",
+      storageBucket: "geocachelog-db.appspot.com",
+      messagingSenderId: "731415668266",
+      appId: "1:731415668266:web:0770737a60e6a8f0b28553"
+  };
+
+  // Initialiser Firebase
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+
+  // Fonction pour soumettre le formulaire
+  function submitForm(event) {
+      event.preventDefault();
+      const cacheCode = document.getElementById("cache-code").value;
+      const dateFound = document.getElementById("date-found").value;
+      const nickname = document.getElementById("pseudo-nickname").value;
+
+      // Ajouter les données à Firestore
+      db.collection("cacheLogs").add({
+          cacheCode: cacheCode,
+          dateFound: dateFound,
+          nickname: nickname
+      })
+      .then(() => {
+          alert("Données soumises avec succès !");
+          displayLogs();
+      })
+      .catch((error) => {
+          console.error("Erreur lors de l'ajout du document : ", error);
+      });
+  }
+
+  // Afficher les logs
+  function displayLogs() {
+      const logEntries = document.getElementById('log-entries');
+      logEntries.innerHTML = '';
+
+      db.collection("cacheLogs").get().then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+              const log = doc.data();
+              const logEntry = document.createElement('div');
+              logEntry.className = 'log-entry';
+              logEntry.innerHTML = `
+                  <h3>${log.cacheCode} - ${log.nickname}</h3>
+                  <p><strong>Date Found:</strong> ${log.dateFound}</p>
+              `;
+              logEntries.appendChild(logEntry);
+          });
+      });
+  }
+
+  // Charger les logs à l'initialisation
+  window.onload = displayLogs;
+</script>
+
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div id="branding">
+        <h1>
+          <img src="https://s3.amazonaws.com/gs-geo-images/8d185281-4cdd-42d8-9a61-36f537d46477_sq250.jpg" alt="Geocaching Logo" class="logo" width="50" height="50">
+          <span class="highlight">GeoCacheLog</span>
+        </h1>
+      </div>
+      <nav>
+        <ul>
+          <li class="current"><a href="https://geocache-log.com/" id="nav-home">Home</a></li>
+        </ul>
+      </nav>
+      <div class="language-selector">
+        <select id="language-select">
+          <option value="en">English</option>
+          <option value="fr">Français</option>
+        </select>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <h1 class="page-title">Welcome to GeoCacheLog</h1>
+    
+    <div id="welcome-message">
+      <p>Thank you for scanning the QR Code.</p>
+      <p>From now on, you will be able to log my caches from this site. This will avoid the hassle of paper being full, wet...</p>
+      <p>Don't hesitate to send me comments from the <a href="https://geocaching.com" target="_blank">geocaching.com</a> website if you notice any problems.</p>
+      <p>Thank you</p>
+    </div>
+
+    <section id="main">
+      <h2 id="form-title">Log Your Found Cache</h2>
+      <form id="log-form" method="GET" action="https://geocache-log.com/submit-log">
+        <div class="form-group">
+          <label for="cache-code" id="label-cache-code">Cache GC Code:</label>
+          <input type="text" id="cache-code" name="cache-code" placeholder="e.g. GC12345" required>
+        </div>
+        <div class="form-group">
+          <label for="date-found" id="label-date-found">Date Found:</label>
+          <input type="date" id="date-found" name="date-found" required>
+        </div>
+        <div class="form-group">
+          <label for="pseudo-nickname" id="label-pseudo-nickname">Pseudo / Nickname:</label>
+          <input type="text" id="pseudo-nickname" name="pseudo-nickname" placeholder="Your geocaching nickname" required>
+        </div>
+        <button type="submit" class="btn" id="submit-btn">Submit Log</button>
+      </form>
+    </section>
+
+    <section id="recent-logs">
+      <h2 id="recent-logs-title">Recent Logs</h2>
+      <div id="log-entries">
+        <!-- Log entries will be dynamically inserted here -->
+      </div>
+    </section>
+  </div>
+
+  <footer>
+    <p id="footer-copyright">GeoCacheLog - Your Geocaching Companion, Copyright © 2023</p>
+  </footer>
+
+  <script>
+    // Initialize cache logs storage
+    let cacheLogs = JSON.parse(localStorage.getItem('cacheLogs')) || {};
+
+    // Language translations
+    const translations = {
+      en: {
+        home: "Home",
+        pageTitle: "Welcome to GeoCacheLog",
+        formTitle: "Log Your Found Cache",
+        cacheCode: "Cache GC Code:",
+        dateFound: "Date Found:",
+        pseudoNickname: "Pseudo / Nickname:",
+        submitBtn: "Submit Log",
+        recentLogsTitle: "Recent Logs",
+        noLogs: "No logs found for this cache. Be the first to log it!",
+        footerCopyright: "GeoCacheLog - Your Geocaching Companion, Copyright © 2023",
+        welcomeMessage: `
+          <p>Thank you for scanning the QR Code.</p>
+          <p>From now on, you will be able to log my caches from this site. This will avoid the hassle of paper being full, wet...</p>
+          <p>Don't hesitate to send me comments from the <a href="https://geocaching.com" target="_blank">geocaching.com</a> website if you notice any problems.</p>
+          <p>Thank you</p>
+        `
+      },
+      fr: {
+        home: "Accueil",
+        pageTitle: "Bienvenue sur GeoCacheLog",
+        formTitle: "Enregistrez Votre Cache Trouvée",
+        cacheCode: "Code GC de la Cache :",
+        dateFound: "Date de Découverte :",
+        pseudoNickname: "Pseudo / Surnom :",
+        submitBtn: "Soumettre le Journal",
+        recentLogsTitle: "Journaux Récents",
+        noLogs: "Aucun journal trouvé pour cette cache. Soyez le premier à l'enregistrer !",
+        footerCopyright: "GeoCacheLog - Votre Compagnon de Géocaching, Droits d'auteur © 2023",
+        welcomeMessage: `
+          <p>Merci d'avoir scanné le QR Code.</p>
+          <p>Désormais, vous pourrez enregistrer mes caches depuis ce site. Cela évitera les désagréments du papier plein, mouillé...</p>
+          <p>N'hésitez pas à m'envoyer des commentaires depuis le site <a href="https://geocaching.com" target="_blank">geocaching.com</a> si vous remarquez des problèmes.</p>
+          <p>Merci</p>
+        `
+      }
+    };
+
+    // Function to update page language
+    function updateLanguage(lang) {
+      document.getElementById('nav-home').textContent = translations[lang].home;
+      document.querySelector('.page-title').textContent = translations[lang].pageTitle;
+      document.getElementById('form-title').textContent = translations[lang].formTitle;
+      document.getElementById('label-cache-code').textContent = translations[lang].cacheCode;
+      document.getElementById('label-date-found').textContent = translations[lang].dateFound;
+      document.getElementById('label-pseudo-nickname').textContent = translations[lang].pseudoNickname;
+      document.getElementById('submit-btn').textContent = translations[lang].submitBtn;
+      document.getElementById('recent-logs-title').textContent = translations[lang].recentLogsTitle;
+      document.getElementById('footer-copyright').textContent = translations[lang].footerCopyright;
+      document.getElementById('welcome-message').innerHTML = translations[lang].welcomeMessage;
+      
+      // Update placeholders
+      document.getElementById('cache-code').placeholder = lang === 'en' ? 'e.g. GC12345' : 'ex. GC12345';
+      document.getElementById('pseudo-nickname').placeholder = lang === 'en' ? 'Your geocaching nickname' : 'Votre pseudo de géocaching';
+      
+      // Update page title
+      document.title = translations[lang].pageTitle;
+      
+      // Update displayed logs
+      displayLogs(document.getElementById('cache-code').value);
+    }
+
+    // Language selector event listener
+    document.getElementById('language-select').addEventListener('change', function(e) {
+      currentLang = e.target.value;
+      updateLanguage(currentLang);
+    });
+
+    // Display logs for the entered cache code when the input changes
+    document.getElementById('cache-code').addEventListener('input', function(e) {
+      displayLogs(e.target.value);
+    });
+
+    function displayLogs(cacheCode) {
+      const logEntries = document.getElementById('log-entries');
+      logEntries.innerHTML = '';
+
+      if (cacheLogs[cacheCode]) {
+        cacheLogs[cacheCode].forEach((log, index) => {
+          const logEntry = document.createElement('div');
+          logEntry.className = 'log-entry';
+          logEntry.innerHTML = `
+            <h3>${cacheCode}</h3>
+            <p><strong>${translations[currentLang].dateFound}</strong> ${log.date}</p>
+            <p><strong>${translations[currentLang].pseudoNickname}</strong> ${log.logger}</p>
+          `;
+          logEntries.appendChild(logEntry);
+        });
+      } else {
+        logEntries.innerHTML = `<p>${translations[currentLang].noLogs}</p>`;
+      }
+    }
+
+    // Form submission handler
+    document.getElementById('log-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const cacheCode = document.getElementById('cache-code').value;
+      const date = document.getElementById('date-found').value;
+      const logger = document.getElementById('pseudo-nickname').value;
+
+      if (!cacheLogs[cacheCode]) {
+        cacheLogs[cacheCode] = [];
+      }
+      cacheLogs[cacheCode].unshift({ date, logger });
+
+      localStorage.setItem('cacheLogs', JSON.stringify(cacheLogs));
+      displayLogs(cacheCode);
+
+      // Clear form
+      document.getElementById('date-found').value = '';
+      document.getElementById('pseudo-nickname').value = '';
+    });
+
+    // Initial language setup
+    let currentLang = 'en';
+    updateLanguage(currentLang);
+
+    // Initial display (empty)
+    displayLogs('');
+  </script>
+</body></html>
