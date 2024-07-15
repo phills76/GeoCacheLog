@@ -129,68 +129,7 @@
   }
 </style>
 
-<!-- Inclure Firebase -->
-<script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore.js"></script>
-<script>
-  // Configuration Firebase
-  const firebaseConfig = {
-      apiKey: "AIzaSyALVwlid8qyTCrG4vi9uPhTkmxo2Vg9FR4",
-      authDomain: "geocachelog-db.firebaseapp.com",
-      projectId: "geocachelog-db",
-      storageBucket: "geocachelog-db.appspot.com",
-      messagingSenderId: "731415668266",
-      appId: "1:731415668266:web:0770737a60e6a8f0b28553"
-  };
 
-  // Initialiser Firebase
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.firestore();
-
-  // Fonction pour soumettre le formulaire
-  function submitForm(event) {
-      event.preventDefault();
-      const cacheCode = document.getElementById("cache-code").value;
-      const dateFound = document.getElementById("date-found").value;
-      const nickname = document.getElementById("pseudo-nickname").value;
-
-      // Ajouter les données à Firestore
-      db.collection("cacheLogs").add({
-          cacheCode: cacheCode,
-          dateFound: dateFound,
-          nickname: nickname
-      })
-      .then(() => {
-          alert("Données soumises avec succès !");
-          displayLogs();
-      })
-      .catch((error) => {
-          console.error("Erreur lors de l'ajout du document : ", error);
-      });
-  }
-
-  // Afficher les logs
-  function displayLogs() {
-      const logEntries = document.getElementById('log-entries');
-      logEntries.innerHTML = '';
-
-      db.collection("cacheLogs").get().then((querySnapshot) => {
-          querySnapshot.forEach((doc) => {
-              const log = doc.data();
-              const logEntry = document.createElement('div');
-              logEntry.className = 'log-entry';
-              logEntry.innerHTML = `
-                  <h3>${log.cacheCode} - ${log.nickname}</h3>
-                  <p><strong>Date Found:</strong> ${log.dateFound}</p>
-              `;
-              logEntries.appendChild(logEntry);
-          });
-      });
-  }
-
-  // Charger les logs à l'initialisation
-  window.onload = displayLogs;
-</script>
 
 </head>
 <body>
