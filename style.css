@@ -1,0 +1,127 @@
+body {
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+  margin: 0;
+  padding: 0;
+  background-color: #f4fff9;
+  color: #333;
+}
+.container {
+  width: 80%;
+  max-width: 800px;
+  margin: auto;
+  overflow: hidden;
+  padding: 20px;
+}
+header {
+  background: #007d46;
+  color: #ffffff;
+  padding-top: 30px;
+  min-height: 70px;
+  border-bottom: #00ff91 3px solid;
+}
+header a {
+  color: #ffffff;
+  text-decoration: none;
+  text-transform: uppercase;
+  font-size: 16px;
+}
+header .highlight {
+  color: #ffffff;
+  font-weight: bold;
+}
+header ul {
+  padding: 0;
+  list-style: none;
+}
+header li {
+  float: left;
+  display: inline;
+  padding: 0 20px 0 20px;
+}
+.logo {
+  width: 50px;
+  height: 50px;
+  vertical-align: middle;
+  margin-right: 10px;
+  border-radius: 5px;
+}
+#main {
+  background: #ffffff;
+  padding: 20px;
+  margin-top: 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+h1, h2, h3 {
+  color: #007d46;
+}
+.form-group {
+  margin-bottom: 15px;
+}
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  color: #007d46;
+}
+.form-group input[type="text"],
+.form-group input[type="date"] {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+.btn {
+  display: inline-block;
+  background: #007d46;
+  color: #ffffff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+.btn:hover {
+  background: #005d33;
+}
+#recent-logs {
+  margin-top: 30px;
+}
+.log-entry {
+  background: #f4fff9;
+  border: 1px solid #ddd;
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+}
+footer {
+  background: #007d46;
+  color: #ffffff;
+  text-align: center;
+  padding: 20px;
+  margin-top: 20px;
+}
+.language-selector {
+  float: right;
+  margin-top: 10px;
+}
+.language-selector select {
+  background-color: #005d33;
+  color: white;
+  border: none;
+  padding: 5px;
+  border-radius: 3px;
+}
+#welcome-message {
+  background-color: #e6f7ff;
+  border: 1px solid #b3e5fc;
+  border-radius: 5px;
+  padding: 15px;
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
+.page-title {
+  text-align: center;
+  color: #007d46;
+  margin-bottom: 20px;
+}
